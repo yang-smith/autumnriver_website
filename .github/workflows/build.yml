@@ -27,4 +27,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: npm
-          command: pages deploy ./public --project-name=blog
+          command: pages deploy ./public --project-name=autumnriver-website
