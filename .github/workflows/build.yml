@@ -1,0 +1,30 @@
+name: Build Zola Website
+
+on:
+  push:
+
+jobs:
+  build-webiste:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 2
+          submodules: true
+      - name: Get changes
+        run: git diff --name-only -r HEAD^1 HEAD
+      - name: "Install Zola"
+        id: install-zola
+        uses: taiki-e/install-action@v2
+        with:
+          tool: zola@0.14.0
+      - name: "Build Website"
+        id: build-website
+        run: "zola build"
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
+          command: pages deploy ./public --project-name=blog
