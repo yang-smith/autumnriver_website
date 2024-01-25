@@ -7,8 +7,8 @@ This is an about page, nothing more nothing less `forget about it`.
 
 Stay connected with us:
 
-- Email: [jgll6dij6@mozmail.com](mailto:jgll6dij6@mozmail.com)
-- Code Repositories: [Speyll@GitHub](https://github.com/Speyll)
-- @Speyll anywhere else.
+- Email: [zy892065502@gmail.com](zy892065502@gmail.com)
+<!-- - Code Repositories: [Speyll@GitHub](https://github.com/Speyll) -->
+- Twitter: [AutumnRiver](https://twitter.com/jordenAAA)
   
 <!-- {{ youtube(id="pS6zJ7IsJkM" class="textCenter") }} -->
