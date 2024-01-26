@@ -1,7 +1,4 @@
 +++
-paginate_by = 15
-path = "blog"
-sort_by = "date"
 +++
 
 
