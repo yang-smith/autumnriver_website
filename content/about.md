@@ -1,11 +1,17 @@
 +++
 title = "About"
 +++
-This is an about page, nothing more nothing less `forget about it`.
+> *秋水时至，百川灌河。至于北海，东面而视，不见水端。*
 
-## Online Presence
+## 我的哲学
 
-Stay connected with us:
+在自在中自由。
+
+世界永远在变化中。
+
+真实拥有恒定的力量。
+
+### 联系我:
 
 - Email: [zy892065502@gmail.com](zy892065502@gmail.com)
 <!-- - Code Repositories: [Speyll@GitHub](https://github.com/Speyll) -->

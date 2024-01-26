@@ -42,12 +42,13 @@ favicon = "favicon.ico"
 image = ""
 
 default_theme = "light"
-list_pages = false
+list_pages = true
 
 
 header_nav = [
   { url = "/", name_en = "/home/", name_fr = "/accueil/" },
+  { url = "/blog", name_en = "/blog/", name_fr = "/blog/" },
   { url = "/about", name_en = "/about/", name_fr = "/concernant/" },
-  { url = "/journal", name_en = "/journal/", name_fr = "/journal/" },
-  { url = "/blog", name_en = "/blog/", name_fr = "/blog/" }
+  { url = "/now", name_en = "/now/", name_fr = "/now/" },
+
 ]

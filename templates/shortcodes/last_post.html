@@ -1,0 +1,6 @@
+{% for post in site.posts | reverse | take(count=args.count | default(value=8)) %}
+    <li>
+        <a href="{{ post.permalink }}">{{ post.title }}</a>
+        <span>{{ post.date | date(format="%Y-%m-%d") }}</span>
+    </li>
+{% endfor %}
