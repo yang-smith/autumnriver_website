@@ -1,26 +1,28 @@
 +++
 title = "Personal journal"
-date = 2019-10-05
+date = 2024-01-26
 draft = false
 +++
 
-## 2023-06-29 🔧
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dignissim nulla et ornare. Vestibulum porta, risus eu ultrices condimentum, quam ante mattis massa, eget laoreet neque nisl ullamcorper nibh.
+## 2024
+
+- 一月：摸索商业，全力投入[项目](https://bookmarkbot.fun)开发。关注独立开发，超级个体。
 
 
-## 2023-06-28 😊
-Etiam vulputate nibh in magna feugiat viverra. Donec ultricies sagittis justo vel facilisis. Nulla sollicitudin felis eu tortor consectetur, ac sodales odio faucibus. Vivamus id ultrices orci, ut luctus dolor. Sed sem nibh, semper in posuere eget, dictum eget dui. Praesent nunc dolor, lacinia at tortor eget, sollicitudin sagittis turpis.
+## 2023
 
-{{ img(id="https://uploads-ssl.webflow.com/5ff0b3326e5782a256714165/638b6f3a3d8d2e6bad1cb03b_Random22.1.jpg", alt="xfx6800xt", class="textCenter") }}
+- 三月：离职
+- 四五月：道观闭关
+- 六月：大理。确认心意，不再打工。
+- 七月：游经 广州，深圳，上海，北京，大连，吉林。去每一个城市，与这个城市的朋友见面。
+- 八月：在东北参加 山海坞 活动
+- 九月十月：安吉DN数字游民社区。构想AI相关的项目。
+- 十一月：上海参加Hackathon，杭州访友
+- 十二月：清迈旅居，参加瓦猫2
 
-## 2022-11-30 💀
-Pellentesque iaculis diam leo, vel euismod libero finibus sed. Praesent ultrices libero nec lectus posuere euismod. Fusce lobortis elit dui. In non pulvinar ligula. Integer augue mauris, condimentum vitae ante sit amet, consectetur scelerisque lectus. Sed dignissim vitae magna et volutpat. Integer vel risus sagittis
+## 2021-2022
+在深圳打工。软件工程师，做智能家居相关开发。
 
-## 2022-11-11 😐
-Vivamus molestie, ipsum id ullamcorper facilisis, velit neque elementum metus, quis lacinia ligula felis et metus. Quisque at condimentum tellus, id venenatis turpis. Integer accumsan metus non mauris vulputate pretium.
-
-## 2022-10-29 🍿
-vel mollis varius. Aenean non bibendum dui, eget facilisis turpis. Cras eleifend mi vel leo malesuada, ac vestibulum est condimentum. Aenean accumsan felis elit, sed porttitor nulla volutpat nec. In leo purus, condimentum ut augue sed, imperdiet dapibus sapien. Proin id ullamcorper nisi. 
-
-## 2022-10-27 💢
-facilisis sapien, quis faucibus leo urna ut diam. Etiam eu dolor vestibulum, cursus odio at, aliquam nibh. Donec molestie metus non purus facilisis euismod. In interdum luctus libero, in mollis est tincidunt at. Nam congue, nibh nec tempus elementum, nunc sapien placerat felis, id dignissim sapien tellus a libero. Nunc at elementum tortor, eget scelerisque elit. Donec ultricies mi at accumsan semper. Pellentesque vehicula leo sed urna dapibus, quis feugiat arcu auctor. 
+## 学生时代
+本科自动化，倒腾机械臂，智能车，无人机之类。
+硕士AI机器学习，学术研究的不深，工程代码写了不少。
