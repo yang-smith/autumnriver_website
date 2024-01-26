@@ -3,7 +3,7 @@
 
 ## Overview
 
-something
+君秋水的个人网站。记录我的[文章和想法](./post)，有[价值的内容](./achieve)。你可以在这里[了解我](./about)，或者看看我现在[在做什么](./now)。
 
 > *"Useless blockquote"*
 
