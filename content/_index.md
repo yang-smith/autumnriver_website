@@ -6,6 +6,7 @@
 
 ## Blog Posts
 
+- [GPT-5：我们知道哪些？](./blog/gpt5-news/)
 - [激活ChatGPT（prompt工程小白到进阶）](./blog/ji-huo-chatgpt-promptgong-cheng-xiao-bai-dao-jin-jie/)
 - [GPT-4实战：从零开始的全栈开发](./blog/gpt-4shi-zhan-cong-ling-kai-shi-de-quan-zhan-kai-fa/)
 - [规训社会与功绩社会（《倦怠社会》读后感）](./blog/gui-xun-she-hui-yu-gong-ji-she-hui-juan-dai-she-hui-du-hou-gan/)
