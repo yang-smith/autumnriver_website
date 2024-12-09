@@ -6,6 +6,7 @@
 
 ## Blog Posts
 
+- [AI与能源，交织前进](./blog/2024-12-09-ai-energy-development/)
 - [RAG：检索增强生成技术](./blog/2024-11-3-rag/)
 - [GPT-5：我们知道哪些？](./blog/gpt5-news/)
 - [激活ChatGPT（prompt工程小白到进阶）](./blog/ji-huo-chatgpt-promptgong-cheng-xiao-bai-dao-jin-jie/)
