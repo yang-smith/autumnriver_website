@@ -1,0 +1,7 @@
+{
+    "pasteImage.path": "${projectRoot}/content/blog/${currentFileNameWithoutExt}",
+    "pasteImage.basePath": "${projectRoot}/content/blog",
+    "pasteImage.prefix": "/blog",
+    "pasteImage.defaultName": "Y-MM-DD-HH-mm-ss",
+    "pasteImage.insertPattern": "![${imageFileNameWithoutExt}](${imageFilePath})"
+} 

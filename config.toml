@@ -37,12 +37,13 @@ internal_level = "warn"
 
 [extra]
 twitter_card = true
+show_thoughts = true
+transparent = true
 
 favicon = "favicon.ico"
 image = ""
-
 default_theme = "light"
-list_pages = true
+list_pages = false
 
 
 header_nav = [

@@ -68,14 +68,15 @@ html {
 }
 
 body {
-  font-family: monospace;
-  font-size: 1.8rem;
-  line-height: 1.5;
-  max-width: 64rem;
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+  line-height: var(--line-height);
+  max-width: 680px;
   margin: auto;
   overflow-wrap: break-word;
   background: var(--bgColor);
   color: var(--fgColor);
+  scroll-behavior: smooth;
 }
 
 h1 {
@@ -101,10 +102,14 @@ h6::before {
 }
 
 a {
+  color: var(--color-primary);
   text-decoration: none;
-  padding: 0 .2rem 0 .2rem;
-  border-radius: .3rem;
-  color: var(--linkColor);
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
+  
+  &:hover {
+    border-bottom-color: currentColor;
+  }
 }
 
 a:focus,
@@ -157,8 +162,14 @@ img {
   height: auto;
   margin: .2rem;
   padding: .2rem;
-  border: dashed .2rem var(--metaColor);
-  border-radius: 15px
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.01);
+  }
 }
 
 pre {
@@ -276,7 +287,13 @@ textarea {
   cursor: pointer;
   border: none;
   font-size: 1.8rem;
-  background-color: transparent
+  background-color: transparent;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .dark .themeButton.dark,
@@ -349,4 +366,97 @@ textarea {
   .wrapper {
     margin: 1rem;
   }
+}
+
+:root {
+  --font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+  --text-base: 1.6rem;
+  --text-lg: 2rem;
+  --text-xl: 2.4rem;
+  --line-height: 1.7;
+  --spacing-unit: 2.4rem;
+  --color-text: #2c3e50;
+  --color-background: #ffffff;
+  --color-primary: #007AFF;
+  --color-secondary: #5856D6;
+  --color-accent: #FF2D55;
+}
+
+p {
+  margin-bottom: var(--spacing-unit);
+}
+
+h1, h2, h3 {
+  margin-top: calc(var(--spacing-unit) * 2);
+  margin-bottom: var(--spacing-unit);
+}
+
+/* 更细致的文章布局 */
+.content {
+  padding: calc(var(--spacing-unit) * 2) var(--spacing-unit);
+}
+
+/* 深色模式配色 */
+:root.dark {
+  --color-text: #e9ecef;
+  --color-background: #1c1c1e;
+  --color-primary: #0A84FF;
+  --color-secondary: #5E5CE6;
+  --color-accent: #FF375F;
+}
+
+/* Thoughts Section Styling */
+.thoughts-section {
+  margin: 3rem 0;
+}
+
+.thoughts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 2rem 0;
+  max-width: 800px; /* 可选：限制最大宽度 */
+}
+
+.thought-card {
+  background: var(--bgColor);
+  border: 1px solid var(--metaColor);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.thought-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.thought-card blockquote {
+  border-left: none;
+  margin: 0;
+  padding: 0;
+  font-style: italic;
+  color: var(--fgColor);
+}
+
+.thought-card cite {
+  display: block;
+  margin-top: 1rem;
+  color: var(--metaColor);
+  font-style: normal;
+}
+
+.thought-card time {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--dimGrey);
+}
+
+/* Section Headers */
+.thoughts-section h2,
+.posts-section h2 {
+  border-bottom: 2px solid var(--metaColor);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
 }

@@ -3,27 +3,60 @@
 {% block content %}
 {{ section.content | safe }}
 
+<!-- Brief Thoughts Section -->
+{% if config.extra.show_thoughts %}
+<div class="thoughts-section">
+  <h2>只言片语</h2>
+  <div class="thoughts-grid">
+    {% set thoughts_section = get_section(path="thoughts/_index.md") %}
+    {% for page in thoughts_section.pages  | slice(end=5) %}
+      <div class="thought-card">
+        <blockquote>
+          {{ page.content | safe }}
+        </blockquote>
+        {% if page.extra.author %}
+        <cite>— {{ page.extra.author }}</cite>
+        {% endif %}
+        <time datetime="{{ page.date }}">{{ page.date | date(format="%Y-%m-%d") }}</time>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Regular Posts Section -->
 {% if config.extra.list_pages %}
+<div class="posts-section">
+  <h2>文章</h2>
+  {% if paginator %}
+  {% set pages = paginator.pages %}
+  {% else %}
+  {% set pages = section.pages %}
+  {% endif %}
 
-{% if paginator %}
-{% set pages = paginator.pages %}
-{% else %}
-{% set pages = section.pages %}
-{% endif %}
+  <ul class="titleList">
+  {% for page in pages %}
+    {% if not page.extra or not page.extra.type or page.extra.type != "thought" %}
+    <li>
+      <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+      <br />
+      {{ page.description }}
+    </li>
+    {% endif %}
+  {% endfor %}
+  </ul>
 
-<ul class="titleList">
-{% for page in pages %}
-  <li>
-    <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
-    <br />
-    {{ page.description }}
-  </li>
-{% endfor %}
-</ul>
-
-{% if paginator %}
-<div class="metaData">{% if paginator.previous %}<a href="{{ paginator.first }}">⥶</a> &nbsp <a href="{{ paginator.previous }}"><</a>{% endif %} &nbsp {{ paginator.current_index }} / {{ paginator.number_pagers }} &nbsp {% if paginator.next %}<a href="{{ paginator.next }}">></a> &nbsp <a href="{{ paginator.last }}">⥸</a>{% endif %}</div>
-{% endif %}
-
+  {% if paginator %}
+  <div class="metaData">
+    {% if paginator.previous %}
+    <a href="{{ paginator.first }}">⥶</a> &nbsp <a href="{{ paginator.previous }}"><</a>
+    {% endif %}
+    &nbsp {{ paginator.current_index }} / {{ paginator.number_pagers }} &nbsp 
+    {% if paginator.next %}
+    <a href="{{ paginator.next }}">></a> &nbsp <a href="{{ paginator.last }}">⥸</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
 {% endif %}
 {% endblock content %}
