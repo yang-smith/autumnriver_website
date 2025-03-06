@@ -19,3 +19,11 @@ const getTheme = () => {
 }
 
 getTheme();
+
+// 检测目录并添加类
+document.addEventListener('DOMContentLoaded', () => {
+  const tocSidebar = document.querySelector('.toc-sidebar');
+  if (tocSidebar) {
+    document.body.classList.add('has-toc');
+  }
+});

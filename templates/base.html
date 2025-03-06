@@ -1,20 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ config.default_language }}">
 <head>
-    {% include "head.html" %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ config.description }}{% endif %}">
+  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ config.title }}</title>
+  <link rel="stylesheet" href="{{ get_url(path='css/style.css', trailing_slash=false) | safe }}">
+  {% if config.extra.favicon %}
+  <link rel="icon" type="image/png" href="{{ get_url(path=config.extra.favicon) | safe }}">
+  {% endif %}
 </head>
 <body>
-    <div class="wrapper">
-      <header>
-          {% include "header.html" %}
-      </header>
-      <main>
-          {% block content %}
-          {% endblock content %}
-      </main>
-      <footer>
-          {% include "footer.html" %}
-      </footer>
-    </div>
+  <div class="wrapper">
+    <header>
+      <nav class="navBar">
+        <div class="site-logo">
+          <a href="{{ config.base_url }}">{{ config.title }}</a>
+        </div>
+        <div class="nav-links">
+          <a href="{{ config.base_url }}">Home</a>
+          <a href="{{ get_url(path='@/blog/_index.md') }}">Blog</a>
+          <a href="{{ get_url(path='@/about.md') }}">About</a>
+          <button class="themeButton light" onclick="setTheme('light')">☀️</button>
+          <button class="themeButton dark" onclick="setTheme('dark')">🌙</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      {% block content %}{% endblock content %}
+    </main>
+
+    <footer>
+      <div class="footContainer">
+        <div class="copyright">© {{ now() | date(format="%Y") }} {{ config.extra.author }}</div>
+        <div>Built with <a href="https://www.getzola.org/">Zola</a> • Designed with care</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const setTheme = (theme) => {
+      document.documentElement.className = theme;
+      localStorage.setItem('theme', theme);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 设置主题
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      setTheme(savedTheme);
+      
+      // 检测目录并添加类
+      const tocSidebar = document.querySelector('.toc-sidebar');
+      if (tocSidebar) {
+        document.body.classList.add('has-toc');
+      }
+    });
+  </script>
 </body>
 </html>
