@@ -41,6 +41,7 @@ favicon = "favicon.ico"
 image = ""
 default_theme = "light"
 list_pages = false
+version = "1.2"
 
 
 header_nav = [
