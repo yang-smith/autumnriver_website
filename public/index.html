@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>秋水</title>
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg-deep: #080e14;
+    --bg-mid: #162e3e;
+    --gold-warm: #e8d5b0;
+    --gold-dim: rgba(232, 213, 176, 0.65);
+    --gold-faint: rgba(232, 213, 176, 0.18);
+    --gold-muted: rgba(232, 213, 176, 0.4);
+    --teal: #4a7c8c;
+    --teal-dim: rgba(74, 124, 140, 0.35);
+    --amber: #c47c4a;
+    --amber-dim: rgba(196, 124, 74, 0.55);
+    --text-secondary: rgba(232, 213, 176, 0.55);
+    --text-muted: rgba(232, 213, 176, 0.28);
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at 65% 15%, rgba(42, 84, 102, 0.65) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(22, 58, 75, 0.5) 0%, transparent 45%),
+      linear-gradient(165deg, #080e14 0%, #0e1e2c 35%, #162e3e 70%, #1a3545 100%);
+    min-height: 100vh;
+    color: var(--gold-warm);
+    font-family: 'Georgia', 'Songti SC', serif;
+    background-attachment: fixed;
+  }
+
+  /* 噪点纹理 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/></filter><rect width='250' height='250' filter='url(%23n)'/></svg>");
+    z-index: 1000;
+  }
+
+  /* ============ 大气云层 ============ */
+  .atmosphere {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .cloud-layer {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+  }
+
+  /* 底部青蓝大云 */
+  .cloud-1 {
+    width: 130vw;
+    height: 65vh;
+    bottom: -20vh;
+    left: -15vw;
+    background: radial-gradient(ellipse at center, rgba(42, 84, 102, 0.55) 0%, transparent 68%);
+    filter: blur(60px);
+    animation: drift-1 120s ease-in-out infinite alternate;
+  }
+
+  /* 右上暖金云 */
+  .cloud-2 {
+    width: 70vw;
+    height: 50vh;
+    top: -10vh;
+    right: -10vw;
+    background: radial-gradient(ellipse at center, rgba(196, 124, 74, 0.14) 0%, transparent 62%);
+    filter: blur(70px);
+    animation: drift-2 150s ease-in-out infinite alternate;
+  }
+
+  /* 左中深青云 */
+  .cloud-3 {
+    width: 55vw;
+    height: 45vh;
+    top: 25vh;
+    left: -8vw;
+    background: radial-gradient(ellipse at center, rgba(74, 124, 140, 0.22) 0%, transparent 60%);
+    filter: blur(75px);
+    animation: drift-3 100s ease-in-out infinite alternate;
+  }
+
+  /* 右下幽蓝云 */
+  .cloud-4 {
+    width: 80vw;
+    height: 40vh;
+    bottom: 8vh;
+    right: -18vw;
+    background: radial-gradient(ellipse at center, rgba(30, 60, 90, 0.35) 0%, transparent 65%);
+    filter: blur(80px);
+    animation: drift-4 130s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift-1 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(4vw, -3vh) scale(1.04); }
+  }
+  @keyframes drift-2 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-3vw, 4vh) scale(0.96); }
+  }
+  @keyframes drift-3 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(5vw, 2vh) scale(1.07); }
+  }
+  @keyframes drift-4 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-4vw, -3vh) scale(1.03); }
+  }
+
+  /* 鼠标光晕 */
+  .cursor-glow {
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74, 124, 140, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+    transition: left 1s ease, top 1s ease;
+    filter: blur(20px);
+  }
+
+  /* ============ 布局 ============ */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  /* ============ 导航 ============ */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 52px 0 0;
+  }
+
+  .nav-logo {
+    font-size: 1.15rem;
+    letter-spacing: 0.22em;
+    color: var(--gold-warm);
+    text-decoration: none;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    transition: color 0.4s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--gold-warm);
+  }
+
+  /* ============ HERO：精选文章 ============ */
+  .hero {
+    padding: 16vh 0 14vh;
+  }
+
+  .hero-eyebrow {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    margin-bottom: 36px;
+    opacity: 0.8;
+  }
+
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .hero-label-line {
+    width: 28px;
+    height: 1px;
+    background: var(--amber-dim);
+  }
+
+  .hero-label-text {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    color: var(--amber-dim);
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.35;
+    color: var(--gold-warm);
+    letter-spacing: 0.04em;
+    margin-bottom: 24px;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--teal);
+  }
+
+  .hero-desc {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    line-height: 1.9;
+    max-width: 500px;
+    margin-bottom: 36px;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .hero-tag {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    color: var(--teal);
+    padding: 4px 10px;
+    border: 1px solid var(--teal-dim);
+    border-radius: 2px;
+  }
+
+  .hero-date {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+  }
+
+  .hero-read {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    color: var(--gold-muted);
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: color 0.4s ease;
+    text-decoration: none;
+  }
+
+  .hero-read:hover {
+    color: var(--gold-warm);
+  }
+
+  .hero-read-line {
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    transition: width 0.4s ease;
+  }
+
+  .hero-read:hover .hero-read-line {
+    width: 36px;
+  }
+
+  /* ============ 分割线 ============ */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(232, 213, 176, 0.1), transparent);
+  }
+
+  .divider-short {
+    width: 36px;
+    height: 1px;
+    background: var(--amber-dim);
+    margin: 72px 0;
+  }
+
+  /* ============ 分类 ============ */
+  .categories-section {
+    padding: 72px 0;
+  }
+
+  .section-label {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.32em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .categories {
+    display: flex;
+    gap: 0;
+  }
+
+  .category {
+    flex: 1;
+    padding: 36px 0;
+    border-left: 1px solid rgba(74, 124, 140, 0.18);
+    padding-left: 32px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+  }
+
+  .category:first-child {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .category:hover .cat-number {
+    color: rgba(74, 124, 140, 0.55);
+  }
+
+  .category:hover .cat-name {
+    color: var(--teal);
+  }
+
+  .cat-number {
+    font-family: 'Georgia', serif;
+    font-size: 2.2rem;
+    color: rgba(74, 124, 140, 0.18);
+    line-height: 1;
+    margin-bottom: 18px;
+    transition: color 0.4s ease;
+    letter-spacing: 0.05em;
+  }
+
+  .cat-name {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.18em;
+    transition: color 0.4s ease;
+    margin-bottom: 10px;
+  }
+
+  .cat-desc {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    line-height: 1.8;
+  }
+
+  /* ============ 近期文章 ============ */
+  .recent-section {
+    padding: 0 0 80px;
+  }
+
+  .article-list {
+    list-style: none;
+  }
+
+  .article-item {
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(232, 213, 176, 0.05);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 24px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+  }
+
+  .article-item:first-child {
+    border-top: 1px solid rgba(232, 213, 176, 0.05);
+  }
+
+  .article-item:hover .article-title {
+    color: var(--gold-warm);
+  }
+
+  .article-item:hover .article-tag {
+    color: var(--teal);
+    border-color: var(--teal-dim);
+  }
+
+  .article-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .article-title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    transition: color 0.4s ease;
+  }
+
+  .article-desc {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+  }
+
+  .article-tag {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--text-muted);
+    border: 1px solid rgba(232, 213, 176, 0.1);
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: all 0.4s ease;
+  }
+
+  /* ============ 页脚 ============ */
+  footer {
+    padding: 72px 0 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(232, 213, 176, 0.06);
+  }
+
+  .footer-left {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    line-height: 2.2;
+  }
+
+  .footer-quote {
+    font-size: 0.88rem;
+    color: rgba(74, 124, 140, 0.45);
+    font-style: italic;
+    letter-spacing: 0.06em;
+    text-align: right;
+    line-height: 1.9;
+  }
+
+  .footer-quote cite {
+    display: block;
+    font-style: normal;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  /* ============ 淡入动效 ============ */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ 滚动提示 ============ */
+  .scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.2;
+  }
+
+  .scroll-hint-text {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-warm);
+    writing-mode: vertical-rl;
+  }
+
+  .scroll-hint-line {
+    width: 1px;
+    height: 44px;
+    background: linear-gradient(to bottom, transparent, var(--gold-warm));
+  }
+
+  /* hero 区域设为 relative 供 scroll-hint 定位 */
+  .hero-wrapper {
+    position: relative;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- 大气云层 -->
+  <div class="atmosphere">
+    <div class="cloud-layer cloud-1"></div>
+    <div class="cloud-layer cloud-2"></div>
+    <div class="cloud-layer cloud-3"></div>
+    <div class="cloud-layer cloud-4"></div>
+  </div>
+
+  <!-- 鼠标光晕 -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="page">
+
+    <!-- 导航 -->
+    <nav>
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-dot"></div>
+        秋水
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">文章</a></li>
+        <li><a href="#">分类</a></li>
+        <li><a href="#">关于</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hero：精选文章 -->
+    <div class="hero-wrapper">
+      <section class="hero">
+
+        <div class="hero-label">
+          <div class="hero-label-line"></div>
+          <span class="hero-label-text">精选文章</span>
+        </div>
+
+        <h1 class="hero-title">
+            <em>网站施工中... 下面仅是模拟数据</em>
+          河伯望洋：<em>AI 时代</em><br>
+          如何知道自己不知道什么
+        </h1>
+
+        <p class="hero-desc">
+          庄子说，河伯顺流而东，望洋兴叹，才知道自己的渺小。<br>
+          认知边界比知识本身更重要——知道自己不知道什么，<br>
+          才是真正学问的开始。
+        </p>
+
+        <div class="hero-meta">
+          <span class="hero-tag">认知</span>
+          <span class="hero-date">2026 · 04</span>
+          <a href="#" class="hero-read">
+            阅读
+            <span class="hero-read-line"></span>
+          </a>
+        </div>
+
+      </section>
+
+      <div class="scroll-hint">
+        <span class="scroll-hint-text">向下</span>
+        <div class="scroll-hint-line"></div>
+      </div>
+    </div>
+
+  </div><!-- /.page -->
+
+  <div class="section-divider"></div>
+
+  <div class="page">
+
+    <!-- 分类 -->
+    <section class="categories-section fade-in">
+      <p class="section-label">探索方向</p>
+      <div class="categories">
+        <div class="category">
+          <div class="cat-number">一</div>
+          <div class="cat-name">人工智能</div>
+          <div class="cat-desc">
+            模型能力的真实边界<br>
+            涌现、推理与系统性理解
+          </div>
+        </div>
+        <div class="category">
+          <div class="cat-number">二</div>
+          <div class="cat-name">投资</div>
+          <div class="cat-desc">
+            不确定性的价格<br>
+            资产配置的第一性原理
+          </div>
+        </div>
+        <div class="category">
+          <div class="cat-number">三</div>
+          <div class="cat-name">认知</div>
+          <div class="cat-desc">
+            假设审问与思维盲区<br>
+            模型与现实的距离
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- 近期文章 -->
+    <section class="recent-section">
+      <div class="divider-short"></div>
+      <p class="section-label fade-in">近期文章</p>
+
+      <ul class="article-list">
+
+        <li class="article-item fade-in" onclick="window.location.href='posts/AI/prompt.html'">
+          <div class="article-left">
+            <span class="article-title">如何写好prompt？</span>
+            <span class="article-desc">高信息量关键词、设定场域与控制流向</span>
+          </div>
+          <span class="article-tag">AI</span>
+        </li>
+
+        <li class="article-item fade-in">
+          <div class="article-left">
+            <span class="article-title">涌现不是玄学：大语言模型的系统性理解</span>
+            <span class="article-desc">从底层约束出发，而不是从"智能"这个词出发</span>
+          </div>
+          <span class="article-tag">AI</span>
+        </li>
+
+        <li class="article-item fade-in">
+          <div class="article-left">
+            <span class="article-title">不确定性的价格</span>
+            <span class="article-desc">市场定价的是预期，不是现实——这个差值是所有机会的来源</span>
+          </div>
+          <span class="article-tag">投资</span>
+        </li>
+
+        <li class="article-item fade-in">
+          <div class="article-left">
+            <span class="article-title">假设审问：如何识别自己思维里的盲区</span>
+            <span class="article-desc">你的结论是证据逼出来的，还是你想相信的？</span>
+          </div>
+          <span class="article-tag">认知</span>
+        </li>
+
+        <li class="article-item fade-in">
+          <div class="article-left">
+            <span class="article-title">推理边界：当下 AI 的真实能力地图</span>
+            <span class="article-desc">不高估，不低估，看清楚它在哪里</span>
+          </div>
+          <span class="article-tag">AI</span>
+        </li>
+
+        <li class="article-item fade-in">
+          <div class="article-left">
+            <span class="article-title">第一性原理如何应用在资产配置上</span>
+            <span class="article-desc">把所有类比和惯例清空，剩下什么</span>
+          </div>
+          <span class="article-tag">投资</span>
+        </li>
+
+        <li class="article-item fade-in">
+          <div class="article-left">
+            <span class="article-title">系统误差与随机噪音：如何分辨模型何时需要修正</span>
+            <span class="article-desc">最违反预期的地方，信息密度最高</span>
+          </div>
+          <span class="article-tag">认知</span>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="fade-in">
+      <div class="footer-left">
+        秋水 · 持续更新<br>
+        真实先于舒适
+      </div>
+      <div class="footer-quote">
+        秋水时至，百川灌河
+        <cite>——《庄子·秋水》</cite>
+      </div>
+    </footer>
+
+  </div><!-- /.page -->
+
+  <script>
+    // 鼠标光晕跟随
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', (e) => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    // 滚动淡入
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 90);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
