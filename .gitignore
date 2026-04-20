@@ -1,2 +1,4 @@
 themes
 .env
+agent/*
+agent.py
