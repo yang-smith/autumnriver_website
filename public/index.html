@@ -241,6 +241,10 @@
     letter-spacing: 0.04em;
     margin-bottom: 24px;
   }
+  
+  .hero-title:hover {
+    cursor: pointer;
+  }
 
   .hero-title em {
     font-style: normal;
@@ -561,9 +565,9 @@
         秋水
       </a>
       <ul class="nav-links">
-        <li><a href="#">文章</a></li>
-        <li><a href="#">分类</a></li>
-        <li><a href="#">关于</a></li>
+        <li><a href="#recent">文章</a></li>
+        <li><a href="#categories">分类</a></li>
+        <li><a href="about.html">关于</a></li>
       </ul>
     </nav>
 
@@ -576,7 +580,7 @@
           <span class="hero-label-text">精选文章</span>
         </div>
 
-        <h1 class="hero-title">
+        <h1 class="hero-title" onclick="window.location.href='posts/AI/prompt.html'">
           如何写好<em>Prompt</em>
         </h1>
 
@@ -609,7 +613,7 @@
   <div class="page">
 
     <!-- 分类 -->
-    <section class="categories-section fade-in">
+    <section id="categories" class="categories-section fade-in">
       <p class="section-label">探索方向</p>
       <div class="categories">
         <div class="category">
@@ -642,7 +646,7 @@
     <div class="section-divider"></div>
 
     <!-- 近期文章 -->
-    <section class="recent-section">
+    <section id="recent" class="recent-section">
       <div class="divider_short"></div>
       <p class="section-label fade-in">近期文章</p>
 

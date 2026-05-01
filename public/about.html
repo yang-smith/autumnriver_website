@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于 · 秋水</title>
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg-deep: #080e14;
+    --bg-mid: #162e3e;
+    --gold-warm: #e8d5b0;
+    --gold-dim: rgba(232, 213, 176, 0.65);
+    --gold-faint: rgba(232, 213, 176, 0.18);
+    --gold-muted: rgba(232, 213, 176, 0.4);
+    --teal: #4a7c8c;
+    --teal-dim: rgba(74, 124, 140, 0.35);
+    --amber: #c47c4a;
+    --amber-dim: rgba(196, 124, 74, 0.55);
+    --text-secondary: rgba(232, 213, 176, 0.55);
+    --text-muted: rgba(232, 213, 176, 0.28);
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at 35% 20%, rgba(42, 84, 102, 0.55) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 75%, rgba(22, 58, 75, 0.45) 0%, transparent 45%),
+      linear-gradient(165deg, #080e14 0%, #0e1e2c 35%, #162e3e 70%, #1a3545 100%);
+    min-height: 100vh;
+    color: var(--gold-warm);
+    font-family: 'Georgia', 'Songti SC', serif;
+    background-attachment: fixed;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/></filter><rect width='250' height='250' filter='url(%23n)'/></svg>");
+    z-index: 1000;
+  }
+
+  /* ============ 大气云层 ============ */
+  .atmosphere {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .cloud-layer { position: absolute; border-radius: 50%; will-change: transform; }
+
+  .cloud-1 {
+    width: 120vw; height: 60vh; bottom: -15vh; left: -10vw;
+    background: radial-gradient(ellipse at center, rgba(42, 84, 102, 0.45) 0%, transparent 68%);
+    filter: blur(65px);
+    animation: drift-1 120s ease-in-out infinite alternate;
+  }
+  .cloud-2 {
+    width: 65vw; height: 45vh; top: -8vh; right: -8vw;
+    background: radial-gradient(ellipse at center, rgba(196, 124, 74, 0.10) 0%, transparent 62%);
+    filter: blur(70px);
+    animation: drift-2 150s ease-in-out infinite alternate;
+  }
+  .cloud-3 {
+    width: 50vw; height: 40vh; top: 30vh; left: -5vw;
+    background: radial-gradient(ellipse at center, rgba(74, 124, 140, 0.18) 0%, transparent 60%);
+    filter: blur(75px);
+    animation: drift-3 100s ease-in-out infinite alternate;
+  }
+  .cloud-4 {
+    width: 75vw; height: 38vh; bottom: 10vh; right: -15vw;
+    background: radial-gradient(ellipse at center, rgba(30, 60, 90, 0.30) 0%, transparent 65%);
+    filter: blur(80px);
+    animation: drift-4 130s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift-1 { from { transform: translate(0,0) scale(1); } to { transform: translate(4vw,-3vh) scale(1.04); } }
+  @keyframes drift-2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-3vw,4vh) scale(0.96); } }
+  @keyframes drift-3 { from { transform: translate(0,0) scale(1); } to { transform: translate(5vw,2vh) scale(1.07); } }
+  @keyframes drift-4 { from { transform: translate(0,0) scale(1); } to { transform: translate(-4vw,-3vh) scale(1.03); } }
+
+  .cursor-glow {
+    position: fixed;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74, 124, 140, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+    transition: left 1s ease, top 1s ease;
+    filter: blur(20px);
+  }
+
+  /* ============ 布局 ============ */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  /* ============ 导航 ============ */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 52px 0 0;
+  }
+
+  .nav-logo {
+    font-size: 1.15rem;
+    letter-spacing: 0.22em;
+    color: var(--gold-warm);
+    text-decoration: none;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    transition: color 0.4s ease;
+  }
+
+  .nav-links a:hover { color: var(--gold-warm); }
+
+  /* 当前页高亮 */
+  .nav-links a.active { color: var(--gold-warm); }
+
+  /* ============ 关于主体 ============ */
+  .about-section {
+    padding: 16vh 0 8vh;
+  }
+
+  .about-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+
+  .about-label-line {
+    width: 28px; height: 1px;
+    background: var(--amber-dim);
+  }
+
+  .about-label-text {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    color: var(--amber-dim);
+  }
+
+  .about-name {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--gold-warm);
+    margin-bottom: 48px;
+    line-height: 1.2;
+  }
+
+  /* ============ 联系 ============ */
+  .contact-block {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 80px;
+  }
+
+  .contact-label {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    color: var(--text-muted);
+  }
+
+  .contact-line {
+    width: 20px; height: 1px;
+    background: rgba(232, 213, 176, 0.15);
+  }
+
+  .contact-email {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.4s ease;
+  }
+
+  .contact-email:hover {
+    color: var(--teal);
+  }
+
+  /* ============ 原文块 ============ */
+  .classic-section {
+    padding: 64px 0 100px;
+    border-top: 1px solid rgba(232, 213, 176, 0.06);
+  }
+
+  .classic-eyebrow {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.36em;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+  }
+
+  .classic-text {
+    font-size: 1rem;
+    line-height: 2.4;
+    letter-spacing: 0.08em;
+    color: rgba(232, 213, 176, 0.72);
+    max-width: 620px;
+    /* 竖排感：段落间距 */
+  }
+
+  .classic-text p {
+    margin-bottom: 1.6em;
+  }
+
+  /* 关键词高亮 */
+  .classic-text em {
+    font-style: normal;
+    color: rgba(74, 124, 140, 0.88);
+  }
+
+  /* 引文装饰线 */
+  .classic-wrapper {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .classic-wrapper::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--amber-dim), transparent);
+  }
+
+  .classic-source {
+    margin-top: 36px;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .classic-source::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--text-muted);
+  }
+
+  /* ============ 淡入 ============ */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ 页脚 ============ */
+  footer {
+    padding: 72px 0 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(232, 213, 176, 0.06);
+  }
+
+  .footer-left {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    line-height: 2.2;
+  }
+
+  .footer-quote {
+    font-size: 0.88rem;
+    color: rgba(74, 124, 140, 0.45);
+    font-style: italic;
+    letter-spacing: 0.06em;
+    text-align: right;
+    line-height: 1.9;
+  }
+
+  .footer-quote cite {
+    display: block;
+    font-style: normal;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="atmosphere">
+    <div class="cloud-layer cloud-1"></div>
+    <div class="cloud-layer cloud-2"></div>
+    <div class="cloud-layer cloud-3"></div>
+    <div class="cloud-layer cloud-4"></div>
+  </div>
+
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="page">
+
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-dot"></div>
+        秋水
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#recent">文章</a></li>
+        <li><a href="index.html#categories">分类</a></li>
+        <li><a href="about.html" class="active">关于</a></li>
+      </ul>
+    </nav>
+
+    <!-- 关于主体 -->
+    <section class="about-section fade-in">
+
+      <div class="about-label">
+        <div class="about-label-line"></div>
+      </div>
+
+      <h1 class="about-name">君秋水</h1>
+
+      <div class="contact-block">
+        <span class="contact-label">联系</span>
+        <div class="contact-line"></div>
+        <a href="mailto:892065502@qq.com" class="contact-email">892065502@qq.com</a>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div style="height:1px; background: linear-gradient(to right, transparent, rgba(232,213,176,0.08), transparent);"></div>
+
+  <div class="page">
+
+    <!-- 庄子原文 -->
+    <section class="classic-section fade-in">
+
+      <p class="classic-eyebrow">《庄子 · 秋水》</p>
+
+      <div class="classic-wrapper">
+        <div class="classic-text">
+          <p>
+            <em>秋水时至，百川灌河，</em>泾流之大，两涘渚崖之间，不辩牛马。
+            于是焉河伯欣然自喜，以天下之美为尽在己。
+          </p>
+          <p>
+            顺流而东行，至于北海，东面而视，不见水端。
+            于是焉河伯始旋其面目，<em>望洋向若而叹</em>曰：
+          </p>
+          <p>
+            「野语有之曰，闻道百，以为莫己若者，我之谓也。
+            且夫我尝闻少仲尼之闻而轻伯夷之义者，始吾弗信；
+            今我睹子之难穷也，<em>吾非至于子之门则殆矣，
+            吾长见笑于大方之家。</em>」
+          </p>
+        </div>
+
+        <p class="classic-source">庄周</p>
+      </div>
+
+    </section>
+
+    <footer class="fade-in">
+      <div class="footer-left">
+        秋水 · 持续更新<br>
+      </div>
+      <div class="footer-quote">
+        秋水时至，百川灌河
+        <cite>——《庄子·秋水》</cite>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', (e) => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 120);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
