@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第一性原理 · 秋水</title>
+  <style>
+    /* ========== 前置 CSS ========== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-deep: #080e14;
+      --bg-mid: #162e3e;
+      --gold-warm: #e8d5b0;
+      --gold-dim: rgba(232, 213, 176, 0.65);
+      --gold-faint: rgba(232, 213, 176, 0.18);
+      --gold-muted: rgba(232, 213, 176, 0.4);
+      --teal: #4a7c8c;
+      --teal-dim: rgba(74, 124, 140, 0.35);
+      --amber: #c47c4a;
+      --amber-dim: rgba(196, 124, 74, 0.55);
+      --text-secondary: rgba(232, 213, 176, 0.72);
+      --text-muted: rgba(232, 213, 176, 0.42);
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 65% 15%, rgba(42, 84, 102, 0.65) 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 80%, rgba(22, 58, 75, 0.5) 0%, transparent 45%),
+        linear-gradient(165deg, #080e14 0%, #0e1e2c 35%, #162e3e 70%, #1a3545 100%);
+      min-height: 100vh;
+      background-attachment: fixed;
+      color: var(--gold-warm);
+      font-family: 'Georgia', 'Songti SC', serif;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 1000;
+      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/></filter><rect width='250' height='250' filter='url(%23n)'/></svg>");
+    }
+
+    /* ========== 云层大气 ========== */
+
+    .atmosphere {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .cloud-layer {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform;
+    }
+
+    .cloud-1 {
+      width: 130vw;
+      height: 65vh;
+      bottom: -20vh;
+      left: -15vw;
+      background: radial-gradient(ellipse at center, rgba(42, 84, 102, 0.55) 0%, transparent 68%);
+      filter: blur(60px);
+      animation: drift-1 120s ease-in-out infinite alternate;
+    }
+
+    .cloud-2 {
+      width: 70vw;
+      height: 50vh;
+      top: -10vh;
+      right: -10vw;
+      background: radial-gradient(ellipse at center, rgba(196, 124, 74, 0.14) 0%, transparent 62%);
+      filter: blur(70px);
+      animation: drift-2 150s ease-in-out infinite alternate;
+    }
+
+    .cloud-3 {
+      width: 55vw;
+      height: 45vh;
+      top: 25vh;
+      left: -8vw;
+      background: radial-gradient(ellipse at center, rgba(74, 124, 140, 0.22) 0%, transparent 60%);
+      filter: blur(75px);
+      animation: drift-3 100s ease-in-out infinite alternate;
+    }
+
+    .cloud-4 {
+      width: 80vw;
+      height: 40vh;
+      bottom: 8vh;
+      right: -18vw;
+      background: radial-gradient(ellipse at center, rgba(30, 60, 90, 0.35) 0%, transparent 65%);
+      filter: blur(80px);
+      animation: drift-4 130s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift-1 {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(4vw, -3vh) scale(1.04); }
+    }
+    @keyframes drift-2 {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(-3vw, 4vh) scale(0.96); }
+    }
+    @keyframes drift-3 {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(5vw, 2vh) scale(1.07); }
+    }
+    @keyframes drift-4 {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(-4vw, -3vh) scale(1.03); }
+    }
+
+    /* ========== 页面布局 ========== */
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* ========== 导航栏 ========== */
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 52px 0 0;
+    }
+
+    .nav-logo {
+      font-size: 1.15rem;
+      letter-spacing: 0.22em;
+      color: var(--gold-warm);
+      text-decoration: none;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--amber);
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      transition: color 0.4s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-warm);
+    }
+
+    /* ========== 文章头部 ========== */
+
+    .article-header {
+      padding: 14vh 0;
+    }
+
+    .article-header h1 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-family: 'Georgia', 'Songti SC', serif;
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: 0.03em;
+      color: var(--gold-warm);
+      margin-bottom: 20px;
+    }
+
+    .article-header h1 .accent {
+      color: var(--teal);
+    }
+
+    .article-date {
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.24em;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .article-lead {
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.9;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 36px;
+    }
+
+    .article-divider {
+      width: 36px;
+      height: 1px;
+      background: rgba(196, 124, 74, 0.45);
+    }
+
+    .article-header:not(:has(.article-lead)) .article-date {
+      margin-bottom: 56px;
+    }
+
+    /* ========== 正文排版 ========== */
+
+    .body-copy {
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    .body-copy p {
+      font-family: 'Georgia', 'Songti SC', serif;
+      font-size: 1.05rem;
+      line-height: 2.0;
+      letter-spacing: 0.02em;
+      color: var(--text-secondary);
+      margin-bottom: 1.8em;
+    }
+
+    .body-copy h2 {
+      font-size: 1.2rem;
+      font-family: 'Georgia', 'Songti SC', serif;
+      font-weight: 400;
+      color: var(--gold-warm);
+      letter-spacing: 0.04em;
+      margin-top: 3em;
+      margin-bottom: 1em;
+    }
+
+    .body-copy h3 {
+      font-size: 1rem;
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      color: var(--text-secondary);
+      letter-spacing: 0.12em;
+      font-weight: 400;
+      margin-top: 2.5em;
+      margin-bottom: 0.8em;
+    }
+
+    .body-copy h4 {
+      font-size: 0.82rem;
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 2em;
+      margin-bottom: 0.6em;
+    }
+
+    .body-copy strong {
+      font-weight: 400;
+      color: var(--gold-warm);
+    }
+
+    .body-copy em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .body-copy a {
+      color: var(--teal);
+      text-decoration: none;
+      transition: border-bottom 0.3s ease;
+    }
+
+    .body-copy a:hover {
+      border-bottom: 1px solid var(--teal);
+    }
+
+    .body-copy code {
+      font-family: 'Menlo', 'Consolas', monospace;
+      font-size: 0.88em;
+      color: rgba(74, 124, 140, 0.85);
+      background: rgba(22, 46, 62, 0.6);
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+
+    /* ========== 引用块 ========== */
+
+    .body-copy blockquote {
+      border-left: 2px solid var(--amber);
+      padding-left: 24px;
+      margin: 2.4em 0;
+      font-size: 1rem;
+      line-height: 2.0;
+      color: rgba(232, 213, 176, 0.75);
+    }
+
+    .body-copy blockquote p {
+      margin-bottom: 0.6em;
+      color: rgba(232, 213, 176, 0.75);
+    }
+
+    .body-copy blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    .body-copy blockquote cite {
+      display: block;
+      font-style: normal;
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    .body-copy blockquote cite::before {
+      content: '—— ';
+    }
+
+    /* ========== 无序列表 ========== */
+
+    .body-copy ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 1.8em;
+    }
+
+    .body-copy ul li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 0.4em;
+      line-height: 1.9;
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    .body-copy ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--amber-dim);
+    }
+
+    /* ========== 有序列表 ========== */
+
+    .body-copy ol {
+      list-style: none;
+      counter-reset: ol-counter;
+      padding-left: 0;
+      margin-bottom: 1.8em;
+    }
+
+    .body-copy ol li {
+      counter-increment: ol-counter;
+      position: relative;
+      padding-left: 32px;
+      margin-bottom: 0.4em;
+      line-height: 1.9;
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    .body-copy ol li::before {
+      content: counter(ol-counter) '.';
+      position: absolute;
+      left: 0;
+      font-family: 'Georgia', serif;
+      color: rgba(74, 124, 140, 0.5);
+    }
+
+    /* ========== 分割线 ========== */
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 3em 0;
+    }
+
+    .divider::before {
+      content: '';
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(232, 213, 176, 0.28));
+    }
+
+    .divider-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(196, 124, 74, 0.45);
+      flex-shrink: 0;
+    }
+
+    .divider::after {
+      content: '';
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to left, transparent, rgba(232, 213, 176, 0.28));
+    }
+
+    /* ========== 代码块 ========== */
+
+    .body-copy pre {
+      background: rgba(22, 46, 62, 0.6);
+      border: 1px solid rgba(74, 124, 140, 0.2);
+      padding: 20px 24px;
+      border-radius: 2px;
+      margin: 2em 0;
+      overflow-x: auto;
+    }
+
+    .body-copy pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: rgba(74, 124, 140, 0.85);
+    }
+
+    /* ========== 文末区域 ========== */
+
+    .article-footer {
+      margin-top: 3em;
+    }
+
+    .tags-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 2.4em;
+    }
+
+    .category-tag {
+      color: var(--teal);
+      border: 1px solid var(--teal-dim);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      padding: 4px 10px;
+      border-radius: 2px;
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+    }
+
+    /* ========== 页脚 ========== */
+
+    footer {
+      padding: 72px 0 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(232, 213, 176, 0.06);
+    }
+
+    .footer-left {
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      line-height: 2.2;
+    }
+
+    .footer-left a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.4s ease;
+    }
+
+    .footer-left a:hover {
+      color: var(--gold-warm);
+    }
+
+    .footer-quote {
+      font-size: 0.88rem;
+      color: rgba(74, 124, 140, 0.45);
+      font-style: italic;
+      letter-spacing: 0.06em;
+      text-align: right;
+      line-height: 1.9;
+    }
+
+    .footer-quote cite {
+      display: block;
+      font-style: normal;
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 云层大气 -->
+  <div class="atmosphere">
+    <div class="cloud-layer cloud-1"></div>
+    <div class="cloud-layer cloud-2"></div>
+    <div class="cloud-layer cloud-3"></div>
+    <div class="cloud-layer cloud-4"></div>
+  </div>
+
+  <div class="page">
+    <!-- 导航栏 -->
+    <nav>
+      <a href="../../index.html" class="nav-logo">
+        <div class="nav-logo-dot"></div>
+        秋水
+      </a>
+      <ul class="nav-links">
+        <li><a href="../../index.html#recent">文章</a></li>
+        <li><a href="../../about.html">关于</a></li>
+      </ul>
+    </nav>
+
+    <!-- 文章头部 -->
+    <header class="article-header">
+      <h1><span class="accent">第一性原理</span></h1>
+      <div class="article-date">二〇二六年四月</div>
+      <p class="article-lead">2012 年 9 月，银灰色的特斯拉工厂里，罗斯发问："给初次创业者一些建议吧。"黑衣牛仔裤的马斯克回答："我认为重要的是从第一性原理出发推理，而不是靠类比。"</p>
+      <div class="article-divider"></div>
+    </header>
+
+    <!-- 正文 -->
+    <div class="body-copy">
+      <blockquote>
+        <p>我们过日子惯常的路子就是靠类比——「我们这么做，因为它像以前做过的某件事」，或者「它像别人正在做的事」。……第一性原理可以算一种物理学的看世界方式。把事情归结到最根本的事实，也就是那些我们确信为真的东西，然后从那里往上推。这要费多得多的脑力。</p>
+      </blockquote>
+
+      <p>罗斯："给我举个例子。"</p>
+
+      <p>马斯克："好。有人会说，而且确实有人这么说：「电池包贵得很，它们永远都会这么贵，因为过去一直这么贵。」不，这想法挺蠢的。你要是拿这套想法去看任何新东西，你就永远到不了那个新东西。说到电池，他们会讲「得 600 美元一千瓦时，往后也好不到哪去」。我会说：不对——<strong>电池是什么做的？</strong>用第一性原理的路子去问，就是：电池的组成材料有哪些？这些材料的现货价是多少？里面有钴、镍、铝、碳，一些做隔膜的聚合物，还有一个钢壳。把这些按材料拆开算一遍，如果在伦敦金属交易所买，每样各要多少钱？老天，算出来是 80 美元一千瓦时。所以很清楚，你只要想点巧办法，把这些材料组合成电芯的形状，就能做出比所有人以为的都便宜得多的电池。"</p>
+
+      <p>在2012年，电池包成本是600美元千瓦时，随后2015年，300美元，2020年进一步腰斩，降到150美元，再到最近的2025年，电池包每千瓦时，只要100美元，已然逼近2012年老马测算的材料成本。</p>
+
+      <h2>第一性原理</h2>
+
+      <p>随着老马在各种场合的推崇，第一性原理开始爆火。但中文世界的热度，跟马斯克只有一半关系。</p>
+
+      <p>李善友创建混沌学园（原混沌大学，2014 年创办），把「第一性原理」做成教学体系。他把第一性原理定义成「一个命题系统的元起点」，往上接到亚里士多德和库恩的范式理论，往下落成课程。极大刺激了中文圈对第一性原理的讨论和研究。</p>
+
+      <p>第一性原理从何而来？是马斯克的创新吗？</p>
+
+      <h2>追根溯源</h2>
+
+      <p>在公元前四世纪时，亚里士多德发明了逻辑学三段论，凡人皆有死；苏格拉底是人；故苏格拉底有死。大前提小前提成立，那么结论必然成立。</p>
+
+      <p>没高兴多久，海边思考问题的亚里士多德就发现难题了：如果每个命题都要靠另一个命题来证成，这另一个命题也要靠其他命题证成，这样不就无限倒退了吗。经历了一段时间的思索，他在《后分析篇》中给出出路：演绎体系必须有一些「在本性上更清晰、通过自身被认识」的命题作为起点。也可称之为<strong>元命题</strong>。</p>
+
+      <p>那么是什么是元命题。欧几里得的《几何原本》给了最清晰的说明。欧几里得观察归纳，思考测试，最终发现了平面几何中的元命题：</p>
+
+      <p><strong>五条公设：</strong></p>
+      <ul>
+        <li>由任一点到任一点可作一条直线。</li>
+        <li>一条有限直线可沿直线继续延长。</li>
+        <li>以任意中心、任意距离可作一个圆。</li>
+        <li>凡直角彼此相等。</li>
+        <li>一条直线与两条直线相交，若在同一侧所成的两个内角之和小于两直角，则这两条直线无限延长后必在该侧相交。</li>
+      </ul>
+
+      <p><strong>五条公理：</strong></p>
+      <ul>
+        <li>等于同量之量彼此相等。</li>
+        <li>等量加等量，其和相等。</li>
+        <li>等量减等量，其差相等。</li>
+        <li>彼此能重合的彼此相等。</li>
+        <li>整体大于部分。</li>
+      </ul>
+
+      <p>看起来像是废话，但欧几里得就是用这短短几句，推导出保真的48条定理和467个命题，直接构成了整个平面几何系统。此后两千年，无数能人异士都想完善这个系统，最终却发现，在平面中，这个系统已经饱和，几乎穷尽了平面几何这范畴下的所有内容。</p>
+
+      <p>再后来的科学公理体系皆是参考《几何原本》范式。英国的牛顿，发明了运动三定律和万有引力，将之作为新的元命题。从这个新起点出发，他解释了地面落体、行星轨道、潮汐与彗星等等现象，并能通过公式准确算出物体运动的变化情况。1846年，天文学家发现天王星轨道有偏差——它不该出现在那个位置。法国的勒维耶用纸笔，从牛顿三定律出发，算出必定存在一颗未知行星，在某个具体坐标，正用引力扰动天王星。他把坐标寄给柏林天文台。当晚，望远镜对准那片天区，不到一小时，找到了：海王星。一颗从未有人见过的行星，先在纸上被算出，再在天上被找到，位置偏差不到1度。从已知到未知，这便是元命题加逻辑推导的力量。「找到少数基本定律，推演出全部现象」成为理论物理的默认纲领。</p>
+
+      <p>到2012年，马斯克在访谈中，将此称为第一性原理。考虑到老马曾经学过物理学，或是一种自然而然。</p>
+
+      <h2>用第一性原理分析问题</h2>
+
+      <h3>飞机和飞鸟</h3>
+
+      <p>想象飞机出现之前，人们想造一个飞行器。一般人会说：飞鸟扇翅膀能飞，飞机也该扇翅膀。于是很多人走这条路，做出各种扑翼机，全部失败。</p>
+
+      <p>第一性原理怎么想？</p>
+
+      <p><strong>第一层：飞行是什么？</strong></p>
+      <p>不是"扇翅膀"这个动作，而是克服地球引力，让物体停在空中或向上运动。</p>
+
+      <p><strong>第二层：如何克服引力？</strong></p>
+      <p>必须有一个向上的力，大于物体重量。这个力从哪来？空气。飞行的本质是让空气对物体产生向上的作用力。</p>
+
+      <p><strong>第三层：空气如何产生向上的力？</strong></p>
+      <p>流体力学的硬事实：流速快的地方压强低。机翼上表面弧度大，空气流速快，压强低；下表面平直，流速慢，压强高。上下压强差产生升力。</p>
+
+      <p><strong>第四层：如何让空气流动起来？</strong></p>
+      <p>两种方案。飞鸟选择扇动翅膀，推动空气；飞机选择固定机翼，向前运动，让空气相对流过机翼。后者更适合机械实现——发动机推进远比机械扑翼简单可靠。</p>
+
+      <p>从"飞行"这个目标出发，推导到"固定翼+前进"这个方案，没有模仿飞鸟，却实现了飞行。</p>
+
+      <h3>燃油车对电动车</h3>
+
+      <p>电动车是趋势。是什么让电动车成为趋势？人们说 安静、加速快、电费便宜。这些都是罗列表象。第一性原理如何思考这个事情？</p>
+
+      <p><strong>第一层：燃油车和电动车的根本差异是什么？</strong></p>
+      <p>能源形式和能量转化路径。燃油车是化学能→热能→机械能，电动车是化学能（电池）→电能→机械能。</p>
+
+      <p><strong>第二层：能量转化的物理限制是什么？</strong></p>
+      <p>燃油车的内燃机是热机，受卡诺循环限制。汽油燃烧产生热，热推动活塞做功，但热量不可能百分百转化为功，必然有大量热量散失。这不是工艺问题，是热力学第二定律的铁律。最好的内燃机热效率也就40%上下。</p>
+
+      <p>电动车使用电机，电能直接驱动电机转动，能量转化效率可以达到90%以上。这是两种转化路径的物理上限不同。</p>
+
+      <p><strong>第三层：能源获取成本的结构是什么？</strong></p>
+      <p>汽油：勘探开采→长途运输→炼化→分销→加油站，每个环节都有成本，且石油是不可再生资源，开采成本只会上升。</p>
+
+      <p>电力：风光水核火多种方式发电，边际成本极低，且可再生能源占比持续提升。中国大西北光伏电价已经低至一毛多，输送到充电站也不过几毛钱。因此能源上，用电注定比用油便宜。电动车的使用成本注定比燃油车便宜。能用更低的成本做到同样的事情，没有人不喜欢。</p>
+
+      <p>以前的电动车主要卡在电池上。2012年马斯克算电池材料成本80美元/千瓦时，当时实际成本600美元。电池又贵有难用。但随着电池技术进步，电池制造成本逐渐贴近材料成本本身，那么电动车的售价也会降下来。</p>
+
+      <p><strong>结论：</strong>在能量转化效率和能源成本两个维度都占优。一旦电池技术跨过阈值，电动车取代燃油车的趋势就不可逆转。</p>
+
+      <h2>第一性原理的价值</h2>
+
+      <h3>突破路径依赖</h3>
+
+      <p>2002年，马斯克想造火箭，去俄罗斯买退役的洲际导弹。俄国人报价800万美元一枚。他觉得贵，回来的飞机上算了一笔账：火箭的材料成本——铝合金、钛合金、铜、碳纤维——只占售价的2%。</p>
+
+      <p>那98%去哪了？</p>
+
+      <p>类比思维会说：火箭就是贵，冷战以来一直这么贵，NASA、波音、洛克希德都这么干，你一个外行能便宜到哪去？</p>
+
+      <p>但第一性原理问的是：<strong>火箭为什么贵？</strong></p>
+
+      <p><strong>第一层：成本结构是什么？</strong></p>
+      <p>材料便宜，制造贵。一枚猎鹰9号火箭，造价6000万美元，燃料成本20万美元。发射一次，6000万扔进大海。</p>
+
+      <p><strong>第二层：为什么要扔？</strong></p>
+      <p>没人这么问过。从V2火箭到土星五号到航天飞机，火箭用完就扔是常识。航天飞机试过重复使用，但太复杂，翻新成本比造新的还高。</p>
+
+      <p><strong>第三层：能不能不扔？</strong></p>
+      <p>飞机飞一趟也烧燃料，但飞机可以重复使用几万次。火箭和飞机的本质区别是什么？不是"火箭飞得高"——高度不是理由。</p>
+
+      <p>区别在于：以前没人让火箭回来过。</p>
+
+      <p>马斯克决定让火箭回来。整个航天界嘲笑他。波音的高管说"回收火箭在经济上毫无意义"，NASA的前局长说"SpaceX在浪费时间"。</p>
+
+      <p>2015年12月，猎鹰9号第一级火箭垂直降落在发射场。此后七年，SpaceX回收火箭200多次，单枚火箭最多飞了19次。发射成本从行业平均的2亿美元，降到6700万，再到现在对内部星链项目的边际成本不到1000万美元。</p>
+
+      <p>类比思维让整个行业在"火箭很贵"这个结论上停了五十年。所有人都在优化制造工艺、提升发动机性能、改进材料，但没人质疑"用完就扔"这个前提。</p>
+
+      <p>第一性原理直接问：为什么要扔？材料成本2%，制造成本98%，那让98%的部分回来，边际成本就只剩燃料和翻新。</p>
+
+      <p>一次第一性原理的脑力活动，节约98%的制造成本。</p>
+
+      <h2>让AI使用第一性原理</h2>
+
+      <p>新时代了，你可以让AI学会使用第一性原理，和它深度讨论一些问题。</p>
+
+      <p>我将第一性原理写成了一个skill。感兴趣者自取。</p>
+      <p><a href="https://github.com/yang-smith/river-skills/blob/main/deep-thinking/SKILL.md" target="_blank">https://github.com/yang-smith/river-skills</a></p>
+    </div>
+
+    <!-- 文末区域 -->
+    <div class="body-copy article-footer">
+      <div class="divider"><div class="divider-dot"></div></div>
+      <div class="tags-row">
+        <span class="category-tag">认知</span>
+        <span class="category-tag">思维</span>
+        <span class="category-tag">方法论</span>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+      <div class="footer-left">
+        <a href="../../index.html">秋水</a>
+      </div>
+      <div class="footer-quote">
+        秋水时至，百川灌河
+        <cite>——《庄子·秋水》</cite>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
