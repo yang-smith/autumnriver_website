@@ -486,6 +486,16 @@
       line-height: 2.2;
     }
 
+    .footer-left a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.4s ease;
+    }
+
+    .footer-left a:hover {
+      color: var(--gold-warm);
+    }
+
     .footer-quote {
       font-size: 0.88rem;
       color: rgba(74, 124, 140, 0.45);
@@ -518,13 +528,13 @@
   <div class="page">
     <!-- 导航栏 -->
     <nav>
-      <a href="/" class="nav-logo">
+      <a href="../../index.html" class="nav-logo">
         <div class="nav-logo-dot"></div>
         秋水
       </a>
       <ul class="nav-links">
-        <li><a href="/articles">文章</a></li>
-        <li><a href="/about">关于</a></li>
+        <li><a href="../../index.html#recent">文章</a></li>
+        <li><a href="../../about.html">关于</a></li>
       </ul>
     </nav>
 
@@ -626,7 +636,7 @@
     <!-- 页脚 -->
     <footer>
       <div class="footer-left">
-        秋水 · 持续更新<br>
+        <a href="../../index.html">秋水</a>
       </div>
       <div class="footer-quote">
         秋水时至，百川灌河
