@@ -226,6 +226,19 @@
     color: var(--teal);
   }
 
+  .contact-github {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.4s ease;
+  }
+
+  .contact-github:hover {
+    color: var(--teal);
+  }
+
   /* ============ 原文块 ============ */
   .classic-section {
     padding: 64px 0 100px;
@@ -246,7 +259,6 @@
     letter-spacing: 0.08em;
     color: rgba(232, 213, 176, 0.72);
     max-width: 620px;
-    /* 竖排感：段落间距 */
   }
 
   .classic-text p {
@@ -306,7 +318,6 @@
     transform: translateY(0);
   }
 
-  /* ============ 页脚 ============ */
   footer {
     padding: 72px 0 64px;
     display: flex;
@@ -381,6 +392,12 @@
         <span class="contact-label">联系</span>
         <div class="contact-line"></div>
         <a href="mailto:892065502@qq.com" class="contact-email">892065502@qq.com</a>
+      </div>
+
+      <div class="contact-block">
+        <span class="contact-label">GitHub</span>
+        <div class="contact-line"></div>
+        <a href="https://github.com/yang-smith" target="_blank" class="contact-github">https://github.com/yang-smith</a>
       </div>
 
     </section>

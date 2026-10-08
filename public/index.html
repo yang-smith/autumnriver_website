@@ -22,8 +22,8 @@
     --teal-dim: rgba(74, 124, 140, 0.35);
     --amber: #c47c4a;
     --amber-dim: rgba(196, 124, 74, 0.55);
-    --text-secondary: rgba(232, 213, 176, 0.55);
-    --text-muted: rgba(232, 213, 176, 0.28);
+    --text-secondary: rgba(232, 213, 176, 0.72);
+    --text-muted: rgba(232, 213, 176, 0.42);
   }
 
   html {
@@ -240,10 +240,6 @@
     color: var(--gold-warm);
     letter-spacing: 0.04em;
     margin-bottom: 24px;
-  }
-  
-  .hero-title:hover {
-    cursor: pointer;
   }
 
   .hero-title em {
@@ -565,9 +561,9 @@
         秋水
       </a>
       <ul class="nav-links">
-        <li><a href="#recent">文章</a></li>
-        <li><a href="#categories">分类</a></li>
-        <li><a href="about.html">关于</a></li>
+        <li><a href="#">文章</a></li>
+        <li><a href="#">分类</a></li>
+        <li><a href="#">关于</a></li>
       </ul>
     </nav>
 
@@ -580,19 +576,20 @@
           <span class="hero-label-text">精选文章</span>
         </div>
 
-        <h1 class="hero-title" onclick="window.location.href='posts/AI/prompt.html'">
-          如何写好<em>Prompt</em>
+        <h1 class="hero-title">
+          <em>第一性原理</em>
         </h1>
 
         <p class="hero-desc">
-          AI是一个看过人类所有废话和聪明话的黑盒。你直接与它对话，它的本能必定是滑向最省力、最讨好你的平庸回答，带着一股AI客服味。<br>
-          高阶Prompt是什么？是一根倒刺，一记重锤，一个信息锚。它的作用只有一个：强行钩住AI脑子里那一点极其稀缺的高密区，砸断它滑向概率废话的退路。<br>
+          马斯克问火箭为什么贵，材料成本只占2%。<br>
+          类比思维让整个行业停了五十年，<br>
+          第一性原理直接拆解到底层事实。
         </p>
 
         <div class="hero-meta">
-          <span class="hero-tag">AI</span>
+          <span class="hero-tag">认知</span>
           <span class="hero-date">二〇二六年四月</span>
-          <a href="posts/AI/prompt.html" class="hero-read">
+          <a href="posts/Thinking/first-principles.html" class="hero-read">
             阅读
             <span class="hero-read-line"></span>
           </a>
@@ -613,7 +610,7 @@
   <div class="page">
 
     <!-- 分类 -->
-    <section id="categories" class="categories-section fade-in">
+    <section class="categories-section fade-in">
       <p class="section-label">探索方向</p>
       <div class="categories">
         <div class="category">
@@ -646,11 +643,19 @@
     <div class="section-divider"></div>
 
     <!-- 近期文章 -->
-    <section id="recent" class="recent-section">
+    <section class="recent-section">
       <div class="divider_short"></div>
       <p class="section-label fade-in">近期文章</p>
 
       <ul class="article-list">
+
+        <li class="article-item fade-in" onclick="window.location.href='posts/Thinking/first-principles.html'">
+          <div class="article-left">
+            <span class="article-title">第一性原理</span>
+            <span class="article-desc">从马斯克到亚里士多德，如何从根本上思考问题</span>
+          </div>
+          <span class="article-tag">认知</span>
+        </li>
 
         <li class="article-item fade-in" onclick="window.location.href='posts/AI/fuzi.html'">
           <div class="article-left">
